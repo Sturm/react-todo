@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TodoItem from "./TodoItem/TodoItem";
+import { Button, Col, Form, Row } from 'react-bootstrap';
 
 class Todos extends Component {
   constructor(props) {
@@ -62,34 +63,39 @@ class Todos extends Component {
     const todosElements = this.getTodos();
     return (
       <>
-        <h1>Tasks</h1>
-        <h2>View Tasks</h2>
-        <ul>
-          {todosElements}
-        </ul>
-        <h2>Add Task</h2>
-        <form onSubmit={this.addTodo}>
-          <div>
-            <label htmlFor="title">
-              Title:
-              <input id="title" name="title" type="text"/>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="description">
-              Description:
-              <input id="description" name="description" type="text"/>
-            </label>
-          </div>
-          <div>
-            <label htmlFor="completed">
-              Completed?:
-              <input id="completed" name="completed" type="checkbox"
-                     checked={this.state.done} onChange={this.toggleDone}/>
-            </label>
-          </div>
-          <input type="submit" value="Submit Form"/>
-        </form>
+        <Row className="pt-4">
+          <Col xs={12} sm={12} md={12} lg={6}>
+            <ul className="list-unstyled m-0">
+              {todosElements}
+            </ul>
+            <h2>Add Task</h2>
+            <Form onSubmit={this.addTodo}>
+              <Form.Group>
+                <Form.Label htmlFor="title">
+                  Title:
+                </Form.Label>
+                <Form.Control id="title" name="title" type="text" placeholder="Please enter title"/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="description">
+                  Description:
+                </Form.Label>
+                <Form.Control id="description"
+                              name="description"
+                              type="text"
+                              placeholder="Please enter short description"/>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="completed">
+                  Completed?:
+                </Form.Label>
+                <Form.Check id="completed" name="completed" type="checkbox"
+                            checked={this.state.done} onChange={this.toggleDone}/>
+              </Form.Group>
+              <Button variant="primary" type="submit">Add</Button>
+            </Form>
+          </Col>
+        </Row>
       </>
     )
   }
