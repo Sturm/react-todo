@@ -6,12 +6,12 @@ class Todos extends Component {
     super(props);
     this.state = {
       todos: [],
-      completedCheckbox: false,
+      done: false,
     };
-    this.lastId = 0;
 
+    this.lastId = 0;
     this.addTodo = this.addTodo.bind(this);
-    this.toggleCompleted = this.toggleCompleted.bind(this);
+    this.toggleDone = this.toggleDone.bind(this);
   }
 
   componentDidMount() {
@@ -36,20 +36,26 @@ class Todos extends Component {
 
   addTodo(ev) {
     ev.preventDefault();
+    const { title, description } = ev.target;
+
+    if (!title.value || !description.value) {
+      return;
+    }
+
     this.lastId = this.lastId + 1;
     const todo = {
       id: this.lastId,
-      title: ev.target.title.value,
-      completed: this.state.completedCheckbox,
-      description: ev.target.description.value,
+      title: title.value,
+      done: this.state.done,
+      description: description.value,
     };
     this.setState({ todos: [...this.state.todos, todo] });
     ev.target.reset();
   }
 
-  toggleCompleted(ev) {
+  toggleDone(ev) {
     const value = ev.target.type === "checkbox" ? ev.target.checked : ev.target.value;
-    this.setState({ completedCheckbox: value });
+    this.setState({ done: value });
   }
 
   render() {
@@ -79,7 +85,7 @@ class Todos extends Component {
             <label htmlFor="completed">
               Completed?:
               <input id="completed" name="completed" type="checkbox"
-                     checked={this.state.completedCheckbox} onChange={this.toggleCompleted}/>
+                     checked={this.state.done} onChange={this.toggleDone}/>
             </label>
           </div>
           <input type="submit" value="Submit Form"/>

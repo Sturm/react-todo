@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class TodoItem extends Component {
   render() {
-    const { id, title, description, completed } = this.props.todo;
+    const { id, title, description, done } = this.props.todo;
     const todoContent = (
       <>
         <h3>{title}</h3>
@@ -11,7 +11,7 @@ class TodoItem extends Component {
       </>
     );
 
-    if (completed) {
+    if (done) {
       return (
         <li>
           <s>
