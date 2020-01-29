@@ -70,9 +70,8 @@ const Todos = () => {
             <TodoItem
               key={todo.id}
               todo={todo}
-              deleteTodo={id => {
-                setTodos(todos => todos.filter(todo => todo.id !== id))
-                console.log("dd");
+              deleteTodo={() => {
+                database.ref(`todos/${todos.indexOf(todo)}`).remove();
               }}
             />
           )
