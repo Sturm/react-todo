@@ -4,7 +4,7 @@ import TodoItem from './TodoItem/TodoItem';
 import database from "./../firebase";
 
 const Todos = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState({});
   const [form, setForm] = useState({
     title: "",
   });
@@ -12,7 +12,8 @@ const Todos = () => {
 
   useEffect(() => {
     database.ref("todos").on("value", snapshot => {
-      setTodos(snapshot.val() || []);
+      //console.log(snapshot.val());
+      setTodos(snapshot.val() || {});
       setLoading(false);
     })
   }, []);
@@ -24,20 +25,17 @@ const Todos = () => {
         autoComplete="off"
         onSubmit={e => {
           e.preventDefault();
-          const newTodos = [
-            ...todos,
-            {
-              id: +new Date(),
+          const newTodo = {
+              timestamp: +new Date(),
               title: form.title,
               done: false,
-            },
-          ];
+            };
 
           setForm({
             title: "",
           });
 
-          database.ref('todos').set(newTodos);
+          database.ref('todos').push(newTodo);
         }}
       >
         <Form.Group>
@@ -65,13 +63,17 @@ const Todos = () => {
         </div>
       )}
       <ul className="list-unstyled m-0">
-        {[...todos].reverse().map(todo => {
+        {Object.keys(todos).reverse().map((key) => {
+          const todo = todos[key];
           return (
             <TodoItem
-              key={todo.id}
+              key={key}
               todo={todo}
+              changeDone={e => {
+                database.ref(`todos/${key}/done`).set(e.target.checked);
+              }}
               deleteTodo={() => {
-                database.ref(`todos/${todos.indexOf(todo)}`).remove();
+                database.ref(`todos/${key}`).remove();
               }}
             />
           )
