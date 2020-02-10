@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import TodoItem from './TodoItem/TodoItem';
 import database from "./../firebase";
+import { Redirect } from 'react-router-dom';
 
-const Todos = () => {
+const Todos = ({ user }) => {
+  const userTodoPath = `todos/${user.uid}`;
   const [todos, setTodos] = useState({});
   const [form, setForm] = useState({
     title: "",
@@ -11,8 +13,7 @@ const Todos = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    database.ref("todos").on("value", snapshot => {
-      //console.log(snapshot.val());
+    database.ref(userTodoPath).on("value", snapshot => {
       setTodos(snapshot.val() || {});
       setLoading(false);
     })
@@ -26,16 +27,16 @@ const Todos = () => {
         onSubmit={e => {
           e.preventDefault();
           const newTodo = {
-              timestamp: +new Date(),
-              title: form.title,
-              done: false,
-            };
+            timestamp: +new Date(),
+            title: form.title,
+            done: false,
+          };
 
           setForm({
             title: "",
           });
 
-          database.ref('todos').push(newTodo);
+          database.ref(userTodoPath).push(newTodo);
         }}
       >
         <Form.Group>
@@ -70,10 +71,10 @@ const Todos = () => {
               key={key}
               todo={todo}
               changeDone={e => {
-                database.ref(`todos/${key}/done`).set(e.target.checked);
+                database.ref(`${userTodoPath}/${key}/done`).set(e.target.checked);
               }}
               deleteTodo={() => {
-                database.ref(`todos/${key}`).remove();
+                database.ref(`${userTodoPath}/${key}`).remove();
               }}
             />
           )
@@ -83,4 +84,24 @@ const Todos = () => {
   )
 };
 
-export default Todos;
+const withAuth = (Todos) => {
+  return (props) => {
+    if (props.user === false) {
+      return (
+        <>Loading...</>
+      )
+    }
+
+    if (!props.user) {
+      return (
+        <Redirect to="/"/>
+      )
+    }
+
+    return (
+      <Todos {...props} />
+    )
+  }
+};
+
+export default withAuth(Todos);
