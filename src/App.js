@@ -4,7 +4,7 @@ import Todos from "./Components/Todos";
 import { Button, Container } from 'react-bootstrap';
 import Navigation from './Components/Layout/Navigation';
 import { auth } from "./firebase";
-import { BrowserRouter, Link, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import Login from './Components/Login';
 
 function App() {

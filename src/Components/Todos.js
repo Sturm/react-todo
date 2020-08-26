@@ -17,7 +17,7 @@ const Todos = ({ user }) => {
       setTodos(snapshot.val() || {});
       setLoading(false);
     })
-  }, []);
+  }, [userTodoPath]);
 
   return (
     <>
